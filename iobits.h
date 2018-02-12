@@ -11,7 +11,10 @@ struct Iobits {
 		if (out)
 			pointer = 8;
 		mem = '0';
-		file.open(fname, std::fstream::app | fstream::binary | (out ? fstream::out:fstream::in));
+		if (out)
+			file.open(fname, std::fstream::app | fstream::binary | fstream::out);
+		else
+			file.open(fname, std::fstream::app | fstream::binary | fstream::in);
 	}
 	~Iobits() {
 		close();
@@ -41,12 +44,15 @@ struct Iobits {
 	}
 
 	void writeChar(u_char var) {
+		//cout << "1" << endl;
 		for (int i = 0; i < 8; i++) {
 			writeBool(((char)(var >> (7 - i))) & 0x01);
 		}
+		//cout << "2" << endl;
 	}
 
 	bool readChar(u_char& var) {
+		//cout << mem << " " << pointer << endl;
 		char old = mem;
 		static bool end = false;
 
@@ -61,9 +67,16 @@ struct Iobits {
 	}
 
 	void close() {
-		
+		static bool closed = false;
+		if(closed)
+			return;
+		closed = true;
+
 		if (out) {
+			cout << this << endl;
+			cout << pointer << endl;
 			if (pointer != 8)
+				cout << "!" << endl;
 				mem = mem << pointer;
 				file << mem;
 		}
