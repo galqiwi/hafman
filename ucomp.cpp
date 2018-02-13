@@ -17,11 +17,13 @@ int main() {
 	*/
 	HTree t;
 	t.set_(in);
-	t.print();
+	//t.print();
 	Node* curr = t.nodes[256];
 	bool b;
-	Iobits out("out.txt");
+	Iobits out("out");
+	int i = 0;
 	while (in.readBool(b)) {
+		i++;
 		//cout << 1 << endl;
 		if (b) {
 			curr = curr->l;
@@ -35,4 +37,5 @@ int main() {
 		}
 		//cout << 3 << endl;
 	}
+	cout << i << " - ucomp" << endl;
 }
