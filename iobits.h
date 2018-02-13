@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-
+#include <bitset>
 using namespace std;
 
 struct Iobits {
@@ -28,12 +28,12 @@ struct Iobits {
 			pointer = 8;
 		}
 
-		var = (mem >> (pointer-- - 1)) & 0x01;
+		var = ((u_char)mem >> (pointer-- - 1)) & 0x01;
 		return true;
 	}
 
 	void writeBool(bool var) {
-		cerr << "just wrote " << var << endl;
+		//cerr << "just wrote " << var << endl;
 		mem = (mem << 1) + (var & 0x01);
 		pointer--;
 		//cout << "p:" << pointer << " " << (int)mem << endl;
@@ -49,7 +49,7 @@ struct Iobits {
 	void writeChar(u_char var) {
 		//cout << "1" << endl;
 		for (int i = 0; i < 8; i++) {
-			writeBool(((char)(var >> (7 - i))) & 0x01);
+			writeBool(((char)((u_char)var >> (7 - i))) & 0x01);
 		}
 		//cout << "2" << endl;
 	}
@@ -65,7 +65,7 @@ struct Iobits {
 			else
 				return false;
 		}
-		var = (old << (8 - pointer)) + (mem >> (pointer));
+		var = (old << (8 - pointer)) + ((u_char)mem >> (pointer));
 		return true;
 	}
 
@@ -79,8 +79,9 @@ struct Iobits {
 			//cout << pointer << endl;
 			if (pointer != 8) {
 				cout << "pointer is still " << pointer << endl;
-				cout << "so i just wrote " << (int)mem << endl;
 				mem = mem << pointer;
+				bitset<8> toprint = mem;
+				cout << "so i just wrote " << toprint << endl;
 				file << mem;
 			}
 		}

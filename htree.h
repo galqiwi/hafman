@@ -30,6 +30,31 @@ int findmin(vector<int>v, int ignore) {
 	return out;
 }
 
+Node* recset(Iobits& file, int& p, vector<Node*>& nodes, Node* last) {
+	bool b;
+	file.readBool(b);
+	if (b) {
+		//cout << 2 << endl;
+		//while (true);
+		u_char c;
+		file.readChar(c);
+		cout << c << " done!" << endl;
+		nodes[c]->parent = last;
+		return nodes[c];
+	} else {
+		//cout << p << endl;
+		nodes[p] = new Node();
+		nodes[p]->parent = last;
+		//cout << last << endl;
+		int oldp = p;
+		Node* currn = nodes[p];
+		p++;
+		nodes[oldp]->l = recset(file, p, nodes, currn);
+		nodes[oldp]->r = recset(file, p, nodes, currn);
+		return currn;
+	}
+}
+
 struct HTree {
 	int root;
 	vector<Node*> nodes;
@@ -42,6 +67,26 @@ struct HTree {
 		for(int i = 0; i < 512; i++)
 			if(nodes[i] != 0)
 				delete nodes[i];
+	}
+	void set_(Iobits& file) {
+		root = 256;
+		int p = 256;
+		
+		recset(file, p, nodes, 0);
+		cout << "done!" << endl;
+		for(int i = 0; i < 512; i++)
+			if (nodes[i] == 0)
+				nodes[i] = new Node();
+		for(int i = 0; i < 512; i++)
+			if(nodes[i] != 0)
+				nodes[i]->id = (u_char)i;
+	}
+	void print() {
+		for (int i = 0; i < 512; i++) {
+			//cout << i << endl;
+			if (nodes[i]->parent != 0)
+				cout << (int)nodes[i]->id << "->" << (int)nodes[i]->parent->id << endl;
+			}
 	}
 	void set(const char* file) {
 		vector<int> v(512, 0);
@@ -74,20 +119,36 @@ struct HTree {
 		for(int i = 0; i < 512; i++)
 			if(nodes[i] != 0)
 				nodes[i]->id = (u_char)i;
+		f.close();
 
 		/*
-		for (int i = 0; i < 512; i++)
-			if (v[i] != 0)
-				cout << (int)nodes[i]->id << ": " << v[i] << endl;
+		
 		*/
 	}
-	void printHead(Iobits& file, int i) {
-		Node* curr = nodes[i];
+	void printHead(Iobits& file, Node* curr) {
 		if (curr->r == 0) {
 			file.writeBool(true);
 			file.writeChar(curr->id);
 		} else {
 			file.writeBool(false);
+			printHead(file, curr->r);
+			printHead(file, curr->l);
 		}
 	}
 };
+
+
+void codes_u(vector<vector<bool>>& codes, HTree& t, int i) {
+	//cout << i << " " << t.nodes[i]->r << " " << t.nodes[i]->l << endl;
+	//cout << i  << "!" << endl;
+	if (t.nodes[i]->r == 0)
+		return;
+	int ri = t.nodes[i]->r->id + (t.nodes[i]->r->r == 0 ? 0:256);
+	int li = t.nodes[i]->l->id + (t.nodes[i]->l->r == 0 ? 0:256);
+	codes[ri] = codes[i];
+	codes[li] = codes[i];
+	codes[ri].push_back(true);
+	codes[li].push_back(false);
+	codes_u(codes, t, ri);
+	codes_u(codes, t, li);
+}

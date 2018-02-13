@@ -1,18 +1,5 @@
 #include "htree.h"
 
-void codes_u(vector<vector<bool>>& codes, HTree& t, int i) {
-	//cout << i  << "!" << endl;
-	if (t.nodes[i]->r == 0)
-		return;
-	int ri = t.nodes[i]->r->id + (t.nodes[i]->r->r == 0 ? 0:256);
-	int li = t.nodes[i]->l->id + (t.nodes[i]->l->r == 0 ? 0:256);
-	codes[ri] = codes[i];
-	codes[li] = codes[i];
-	codes[ri].push_back(true);
-	codes[li].push_back(false);
-	codes_u(codes, t, ri);
-	codes_u(codes, t, li);
-}	
 
 int main() {
 	//Iobits r("in.txt", false);
@@ -22,13 +9,25 @@ int main() {
 	HTree t;
 	t.set("in.txt");
 	Iobits out("archive.hman", true);
-	t.printHead(out, t.root);
+	t.printHead(out, t.nodes[t.root]);
+	t.print();
 	//out.writeBool(true);
 	//cout << 238 << endl;
-	out.close();
 	vector<vector<bool>> codes(512, vector<bool>());
 	codes_u(codes, t, t.root);
-	/*
+	Iobits in("in.txt", false);
+	u_char c;
+	
+	while (in.readChar(c)) {
+		//cout << c << endl;
+		vector<bool>& curr = codes[c];
+		for (int i = 0; i < curr.size(); i++) {
+			out.writeBool(curr[i]);
+		}
+	}
+
+	out.close();
+
 	for (int i = 0; i < 512; i++)
 		if (! codes[i].empty()) {
 			vector<bool>& curr = codes[i];
@@ -37,5 +36,5 @@ int main() {
 				cout << curr[k];
 			cout << endl;
 		}
-	*/
+	
 }
