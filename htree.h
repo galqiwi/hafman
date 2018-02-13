@@ -49,7 +49,7 @@ struct HTree {
 		u_char c;
 		//cout << 1 << endl;
 		while (f.readChar(c)) {
-			cout << (int)c << endl;
+			//cout << (int)c << endl;
 			v[(int)c]++;
 		}
 		int p = 256;
@@ -75,20 +75,19 @@ struct HTree {
 			if(nodes[i] != 0)
 				nodes[i]->id = (u_char)i;
 
-
+		/*
 		for (int i = 0; i < 512; i++)
 			if (v[i] != 0)
 				cout << (int)nodes[i]->id << ": " << v[i] << endl;
+		*/
 	}
-	void printHead(Iobits& file) {
-		for (int i = 0; i < 512; i++) {
-
-			//cout << i << " " << (int)nodes[i]->id << " " << nodes[i]->parent << endl;
-			if (nodes[i]->parent == 0)
-				file.writeChar(nodes[i]->id);
-			else
-				file.writeChar(nodes[i]->parent->id);
-			//cout << "!" << endl;
+	void printHead(Iobits& file, int i) {
+		Node* curr = nodes[i];
+		if (curr->r == 0) {
+			file.writeBool(true);
+			file.writeChar(curr->id);
+		} else {
+			file.writeBool(false);
 		}
 	}
 };

@@ -5,8 +5,10 @@ using namespace std;
 
 struct Iobits {
 	bool out;
-	Iobits(const char* fname, bool out = true) {
-		this->out = out;
+	Iobits(const char* fname, bool out_ = true) {
+		closed = false;
+		//cout << out_ << "init" << endl;
+		out = out_;
 		pointer = 0;
 		if (out)
 			pointer = 8;
@@ -31,6 +33,7 @@ struct Iobits {
 	}
 
 	void writeBool(bool var) {
+		cerr << "just wrote " << var << endl;
 		mem = (mem << 1) + (var & 0x01);
 		pointer--;
 		//cout << "p:" << pointer << " " << (int)mem << endl;
@@ -67,23 +70,24 @@ struct Iobits {
 	}
 
 	void close() {
-		static bool closed = false;
 		if(closed)
 			return;
 		closed = true;
-
+		//cout << out << endl;
 		if (out) {
-			cout << this << endl;
-			cout << pointer << endl;
-			if (pointer != 8)
-				cout << "!" << endl;
+			//cout << this << endl;
+			//cout << pointer << endl;
+			if (pointer != 8) {
+				cout << "pointer is still " << pointer << endl;
+				cout << "so i just wrote " << (int)mem << endl;
 				mem = mem << pointer;
 				file << mem;
+			}
 		}
 		
 		file.close();
 	}
-
+	bool closed;
 	char mem;
 	int pointer;
 	fstream file;

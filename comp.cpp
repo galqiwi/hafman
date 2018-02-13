@@ -1,7 +1,7 @@
 #include "htree.h"
 
 void codes_u(vector<vector<bool>>& codes, HTree& t, int i) {
-	cout << i  << "!" << endl;
+	//cout << i  << "!" << endl;
 	if (t.nodes[i]->r == 0)
 		return;
 	int ri = t.nodes[i]->r->id + (t.nodes[i]->r->r == 0 ? 0:256);
@@ -21,13 +21,14 @@ int main() {
 	//cout << c << endl;
 	HTree t;
 	t.set("in.txt");
-	Iobits out("archive.hman");
-	t.printHead(out);
+	Iobits out("archive.hman", true);
+	t.printHead(out, t.root);
 	//out.writeBool(true);
+	//cout << 238 << endl;
 	out.close();
 	vector<vector<bool>> codes(512, vector<bool>());
 	codes_u(codes, t, t.root);
-
+	/*
 	for (int i = 0; i < 512; i++)
 		if (! codes[i].empty()) {
 			vector<bool>& curr = codes[i];
@@ -36,4 +37,5 @@ int main() {
 				cout << curr[k];
 			cout << endl;
 		}
+	*/
 }
