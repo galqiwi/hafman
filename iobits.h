@@ -7,7 +7,7 @@ struct Iobits {
 	bool out;
 	Iobits(const char* fname, bool out_ = true) {
 		closed = false;
-		//cout << out_ << "init" << endl;
+
 		out = out_;
 		pointer = 0;
 		if (out)
@@ -33,13 +33,10 @@ struct Iobits {
 	}
 
 	void writeBool(bool var) {
-		//cerr << "just wrote " << var << endl;
 		mem = (mem << 1) + (var & 0x01);
 		pointer--;
-		//cout << "p:" << pointer << " " << (int)mem << endl;
 
 		if (pointer == 0) {
-			//cout << (int)mem << endl;
 			file << mem;
 			mem = 0;
 			pointer = 8;
@@ -47,15 +44,12 @@ struct Iobits {
 	}
 
 	void writeChar(u_char var) {
-		//cout << "1" << endl;
 		for (int i = 0; i < 8; i++) {
 			writeBool(((char)((u_char)var >> (7 - i))) & 0x01);
 		}
-		//cout << "2" << endl;
 	}
 
 	bool readChar(u_char& var) {
-		//cout << mem << " " << pointer << endl;
 		char old = mem;
 		static bool end = false;
 
@@ -73,10 +67,7 @@ struct Iobits {
 		if(closed)
 			return;
 		closed = true;
-		//cout << out << endl;
 		if (out) {
-			//cout << this << endl;
-			//cout << pointer << endl;
 			if (pointer != 8) {
 				cout << "pointer is still " << pointer << endl;
 				mem = mem << pointer;

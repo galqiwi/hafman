@@ -34,18 +34,14 @@ Node* recset(Iobits& file, int& p, vector<Node*>& nodes, Node* last) {
 	bool b;
 	file.readBool(b);
 	if (b) {
-		//cout << 2 << endl;
-		//while (true);
 		u_char c;
 		file.readChar(c);
 		cout << c << " done!" << endl;
 		nodes[c]->parent = last;
 		return nodes[c];
 	} else {
-		//cout << p << endl;
 		nodes[p] = new Node();
 		nodes[p]->parent = last;
-		//cout << last << endl;
 		int oldp = p;
 		Node* currn = nodes[p];
 		p++;
@@ -83,7 +79,6 @@ struct HTree {
 	}
 	void print() {
 		for (int i = 0; i < 512; i++) {
-			//cout << i << endl;
 			if (nodes[i]->parent != 0)
 				cout << (int)nodes[i]->id << "->" << (int)nodes[i]->parent->id << endl;
 			}
@@ -92,9 +87,7 @@ struct HTree {
 		vector<int> v(512, 0);
 		Iobits f(file, false);
 		u_char c;
-		//cout << 1 << endl;
 		while (f.readChar(c)) {
-			//cout << (int)c << endl;
 			v[(int)c]++;
 		}
 		int p = 256;
@@ -139,8 +132,6 @@ struct HTree {
 
 
 void codes_u(vector<vector<bool>>& codes, HTree& t, int i) {
-	//cout << i << " " << t.nodes[i]->r << " " << t.nodes[i]->l << endl;
-	//cout << i  << "!" << endl;
 	if (t.nodes[i]->r == 0)
 		return;
 	int ri = t.nodes[i]->r->id + (t.nodes[i]->r->r == 0 ? 0:256);
