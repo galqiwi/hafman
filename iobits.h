@@ -4,8 +4,10 @@
 using namespace std;
 
 struct Iobits {
+	int char_i;
 	bool out;
 	Iobits(const char* fname, bool out_ = true) {
+		char_i = 0;
 		closed = false;
 
 		out = out_;
@@ -14,17 +16,27 @@ struct Iobits {
 			pointer = 8;
 		mem = '0';
 		if (out)
-			file.open(fname, std::fstream::app | fstream::binary | fstream::out);
+			file.open(fname, fstream::binary | fstream::out);
 		else
-			file.open(fname, std::fstream::app | fstream::binary | fstream::in);
+			file.open(fname, fstream::binary | fstream::in);
 	}
 	~Iobits() {
 		close();
 	}
-	bool readBool(bool& var) {
-		if (pointer == 0) {
-			if (! file.get(mem)) 
+	bool readBool(bool& var, int len = -1) {
+		if (len != -1 && len == char_i) {
+			int d = ( (((u_char)mem << (7 - pointer))) & 0xFF - (u_char)0x80 );
+			if (d == 0) {
 				return false;
+			}
+		}
+		if (pointer == 0) {
+			if (! file.get(mem)) {
+				char_i++; 
+				return false;
+			} else {
+				char_i++;
+			}
 			pointer = 8;
 		}
 
@@ -54,10 +66,13 @@ struct Iobits {
 		static bool end = false;
 
 		if (! file.get(mem)) {
+			char_i++;
 			if (pointer == 8 && !end)
 				end = true;
 			else
 				return false;
+		} else {
+			char_i++;
 		}
 		var = (old << (8 - pointer)) + ((u_char)mem >> (pointer));
 		return true;

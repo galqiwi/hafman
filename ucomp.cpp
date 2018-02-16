@@ -1,9 +1,15 @@
 #include "htree.h"
 #include <algorithm>
 
+int filesize(const char* filename)
+{
+    std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+    return in.tellg(); 
+}
+
 int main() {
 	Iobits in("archive.hman", false);
-
+	int size = filesize("archive.hman");
 	HTree t;
 	t.set_(in);
 	
@@ -12,7 +18,7 @@ int main() {
 	Iobits out("out");
 	u_char c;
 	int i = 0;
-	while (in.readBool(b)) {
+	while (in.readBool(b, size)) {
 		i++;
 		if (b) {
 			curr = curr->l;
