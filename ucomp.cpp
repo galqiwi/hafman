@@ -19,6 +19,7 @@ int main(int argc, char* argv[])  {
 	u_char c;
 	int i = 0;
 	while (in.readBool(b, size)) {
+		//cout << b << endl;
 		i++;
 		if (b) {
 			curr = curr->l;

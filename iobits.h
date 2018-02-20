@@ -31,7 +31,8 @@ struct Iobits {
 	}
 	bool readBool(bool& var, int len = -1) {
 		if (len != -1 && len == char_i) {
-			int d = ( (((u_char)mem << (7 - pointer))) & 0xFF - (u_char)0x80 );
+			int d = ( (((u_char)mem << (8 -  pointer))) & 0xFF - (u_char)0x80 );
+			//cout << (bitset<8>)d << endl;
 			if (d == 0) {
 				return false;
 			}
