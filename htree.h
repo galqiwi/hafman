@@ -106,7 +106,7 @@ struct HTree {
 			v[smin] = 1e9;
 		}
 		if (root < 256) {
-			nodes[256] = merge(nodes[root], new Node());
+			nodes[256] = merge(nodes[root], new Node(nodes[root]->id == 0 ? 1:0));
 			root = 256;
 			p = 257;
 		}
