@@ -1,3 +1,4 @@
+//MALINOVKSII HUFFMAN COMPRESSOR
 #include "htree.h"
 
 
