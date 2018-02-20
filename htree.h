@@ -36,7 +36,7 @@ Node* recset(Iobits& file, int& p, vector<Node*>& nodes, Node* last) {
 	if (b) {
 		u_char c;
 		file.readChar(c);
-		cout << c << " done!" << endl;
+		//cout << c << " done!" << endl;
 		nodes[c]->parent = last;
 		return nodes[c];
 	} else {
@@ -69,7 +69,7 @@ struct HTree {
 		int p = 256;
 		
 		recset(file, p, nodes, 0);
-		cout << "done!" << endl;
+		//cout << "done!" << endl;
 		for(int i = 0; i < 512; i++)
 			if (nodes[i] == 0)
 				nodes[i] = new Node();
@@ -105,7 +105,12 @@ struct HTree {
 			v[fmin] = 1e9;
 			v[smin] = 1e9;
 		}
-
+		if (root < 256) {
+			nodes[256] = merge(nodes[root], new Node());
+			root = 256;
+			p = 257;
+		}
+		cout << root << endl;
 		for(int i = p; i < 512; i++)
 			nodes[i] = new Node();
 

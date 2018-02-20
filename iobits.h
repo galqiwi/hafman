@@ -30,13 +30,6 @@ struct Iobits {
 		close();
 	}
 	bool readBool(bool& var, int len = -1) {
-		if (len != -1 && len == char_i) {
-			int d = ( (((u_char)mem << (8 -  pointer))) & 0xFF - (u_char)0x80 );
-			//cout << (bitset<8>)d << endl;
-			if (d == 0) {
-				return false;
-			}
-		}
 		if (pointer == 0) {
 			if (! file.get(mem)) {
 				char_i++; 
@@ -46,8 +39,15 @@ struct Iobits {
 			}
 			pointer = 8;
 		}
-
+		if (len != -1 && len == char_i) {
+			int d = ( (((u_char)mem << (8 -  pointer))) & 0xFF - (u_char)0x80 );
+			//cout << (bitset<8>)d << endl;
+			if (d == 0) {
+				return false;
+			}
+		}
 		var = ((u_char)mem >> (pointer-- - 1)) & 0x01;
+
 		return true;
 	}
 
