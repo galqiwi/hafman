@@ -1,21 +1,21 @@
 #include "htree.h"
 #include <algorithm>
 
-int filesize(const char* filename)
-{
-    std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
-    return in.tellg(); 
-}
 
-int main() {
-	Iobits in("archive.hman", false);
-	int size = filesize("archive.hman");
+
+int main(int argc, char* argv[])  {
+	if (argc < 2) {
+		return 0;
+	}
+
+	Iobits in(argv[1], false);
+	int size = filesize(argv[1]);
 	HTree t;
 	t.set_(in);
 	
 	Node* curr = t.nodes[256];
 	bool b;
-	Iobits out("out");
+	Iobits out(argv[2]);
 	u_char c;
 	int i = 0;
 	while (in.readBool(b, size)) {

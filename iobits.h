@@ -3,6 +3,12 @@
 #include <bitset>
 using namespace std;
 
+int filesize(const char* filename)
+{
+    std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
+    return in.tellg();
+}
+
 struct Iobits {
 	int char_i;
 	bool out;

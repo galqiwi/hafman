@@ -1,14 +1,17 @@
 #include "htree.h"
 
 
-int main() {
+int main(int argc, char* argv[])  {
+	if (argc < 2) {
+		return 0;
+	}
 	HTree t;
-	t.set("in");
-	Iobits out("archive.hman", true);
+	t.set(argv[1]);
+	Iobits out(argv[2], true);
 	t.printHead(out, t.nodes[t.root]);
 	vector<vector<bool>> codes(512, vector<bool>());
 	codes_u(codes, t, t.root);
-	Iobits in("in", false);
+	Iobits in(argv[1], false);
 	u_char c;
 	int z = 0;
 	while (in.readChar(c)) {
@@ -18,6 +21,6 @@ int main() {
 			out.writeBool(curr[i]);
 		}
 	}
-	cout << z << " - comp" << endl;
+	out.writeBool(true);
 	out.close();
 }
